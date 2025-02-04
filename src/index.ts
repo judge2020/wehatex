@@ -10,7 +10,7 @@ import { renderDiscordEmbed, renderUserPage, renderUserRedirect } from './Render
 let homepage_md = `
 # We hate X.
 
-X is ran by a Nazi, or at least an attention whore very interested in stripping away fundamental human rights by any means necessary.
+X is ran by a Nazi, or at least an attention whore who [would have ousted hiding Jews and other ethnic groups in Nazi Germany in an instant](https://rr.judge.sh/hz5o0p580zge1.jpeg).
 
 Please use [Bluesky](https://bsky.app) or a Mastodon instance as a direct replacement.
 `;
