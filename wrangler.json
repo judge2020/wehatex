@@ -9,7 +9,33 @@
   "compatibility_date": "2025-02-04",
   "observability": {
     "enabled": true
-  }
+  },
+	"workers_dev": false,
+	"routes": [
+		{
+			"pattern": "wehatex.judge.sh",
+			"custom_domain": true
+		}
+	],
+	"env": {
+		"production": {
+			"routes": [
+				{
+					"pattern": "wehatex.judge.sh",
+					"custom_domain": true
+				}
+			]
+		},
+		"staging": {
+			"routes": [
+				{
+					"pattern": "wehatexstage.judge.sh",
+					"custom_domain": true
+				}
+			],
+			"workers_dev": true
+		}
+	}
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
