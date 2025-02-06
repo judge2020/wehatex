@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import { VxJson, VxMediaExtended } from './types';
 
 let homepage_html = `
 <!DOCTYPE html>
@@ -38,37 +39,70 @@ export function renderUserRedirect(twitter_username: string): any {
 	return renderUserPage(attempt.replaceAll(username_template_var, twitter_username));
 }
 
-export function renderDiscordEmbed(vx_json: any, media_url: string): any {
-	let username = vx_json["user_screen_name"];
-	let user_profile_image_url = vx_json["user_profile_image_url"];
-	let name = vx_json["user_name"];
-	let text = vx_json["text"];
-
-	let discord_embed_html = `
+function renderEmbed(inner_html: string): any {
+	return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name='og:title' content='${name} (@${username} on the worst site' />
-<meta name='og:site_name' content='Please stop using X, seriously.' />
-
-<meta name='twitter:card' content='summary_large_image' />
-
-<meta name='twitter:site' content='${media_url}' />
-
-<meta name='og:description' content='${text}' />
-<meta name='twitter:image' content='${media_url}' />
-<meta name='twitter:image:alt' content='' />
-
+${inner_html}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex">
-<style type="text/css">body{margin:40px
-auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0
-10px}h1,h2,h3{line-height:1.2}</style>
 <title>We Hate Xitter.</title>
 </head>
 </html>
 `;
-	return discord_embed_html;
+}
 
+export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
+	return renderEmbed(`
+<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+<meta name='og:site_name' content='Please stop using X, seriously.' />
+<meta name='twitter:card' content='summary_large_image' />
+<meta name='twitter:site' content='${media_url}' />
+<meta name='og:description' content='${vx_json.text}' />
+<meta name='twitter:image' content='${media_url}' />
+<meta name='twitter:image:alt' content='' />
+`);
+}
+
+export function renderTextEmbed(vx_json: VxJson): any {
+
+	return renderEmbed(`
+	<meta property="og:image" content="${vx_json.user_profile_image_url}" />
+	<meta name="twitter:card" content="tweet" />
+	<meta name="twitter:image" content="${vx_json.user_profile_image_url}" />
+	<meta name="twitter:creator" content="@${vx_json.user_screen_name}" />
+	<meta property="og:description" content="${vx_json.text}" />
+<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+<meta name='og:site_name' content='Please stop using X, seriously.' />
+`);
+}
+
+export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlink: string): any {
+	let username = vx_json.user_screen_name;
+	let name = vx_json["user_name"];
+	let text = vx_json["text"];
+
+	return renderEmbed(`
+<meta name="twitter:card" content="player" />
+<meta name="twitter:image" content="${media.thumbnail_url}" />
+
+<meta name="twitter:player:width" content="${media.size.width}" />
+<meta name="twitter:player:height" content="${media.size.height}" />
+<meta name="twitter:player:stream" content="${vidlink}" />
+<meta name="twitter:player:stream:content_type" content="video/mp4" />
+
+<meta property="og:url" content="${vidlink}" />
+<meta property="og:video" content="${vidlink}" />
+<meta property="og:video:secure_url" content="${vidlink}" />
+<meta property="og:video:type" content="video/mp4" />
+<meta property="og:video:width" content="${media.size.width}" />
+<meta property="og:video:height" content="${media.size.height}" />
+<meta property="og:image" content="${media.thumbnail_url}" />
+<meta property="og:description" content="${vx_json.text}" />
+
+<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+<meta name='og:site_name' content='Please stop using X, seriously.' />
+`);
 }
