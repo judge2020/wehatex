@@ -36,3 +36,8 @@ export type VxJson = {
 	user_screen_name: string;
 
 }
+
+export type tinyFoxJson = {
+	loc: string;
+	remaining_api_calls: string;
+}

@@ -66,6 +66,18 @@ export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
 `);
 }
 
+export function renderFoxEmbed(media_url: string): any {
+	return renderEmbed(`
+<meta name='og:title' content='1d6 → 1 CRITICAL FAILURE. FOX DEPLOYED' />
+<meta name='og:site_name' content='FOR THE LOVE OF GOD STOP USING X' />
+<meta name='twitter:card' content='summary_large_image' />
+<meta name='twitter:site' content='${media_url}' />
+<meta name='og:description' content='To reduce the influence X has, this link has been blackholed. YOU MAY TRY AGAIN by appending or changing the URL query params, eg adding ?try=2. Note that this could fail another 1d6.' />
+<meta name='twitter:image' content='${media_url}' />
+<meta name='twitter:image:alt' content='' />
+`);
+}
+
 export function renderTextEmbed(vx_json: VxJson): any {
 
 	return renderEmbed(`

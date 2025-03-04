@@ -1,5 +1,5 @@
-import { renderImageEmbed, renderTextEmbed, renderUserRedirect, renderVideoEmbed } from './Renderer';
-import { VxJson } from './types';
+import { renderFoxEmbed, renderImageEmbed, renderTextEmbed, renderUserRedirect, renderVideoEmbed } from './Renderer';
+import { tinyFoxJson, VxJson } from './types';
 
 export default class Handler {
 	generate_embed_user_agents = [
@@ -77,6 +77,12 @@ export default class Handler {
 			return new Response(renderUserRedirect(as_split[1]), { headers: { 'Content-Type': 'text/html' } });
 		}
 
+		if (this.rollD6() == 1) {
+			let fox = await fetch("https://api.tinyfox.dev/img.json?animal=fox", {headers: {"accept": 'application/json'}});
+			let fox_json: tinyFoxJson = await fox.json();
+			return new Response(renderFoxEmbed("https://api.tinyfox.dev" + fox_json.loc), { headers: { 'Content-Type': 'text/html' } });
+		}
+
 		// logic pretty much copied from BetterTwitFix's logic. This complies with the DWTFYWTPL.
 
 		let vxtwitter_info = await fetch('https://api.vxtwitter.com/i/status/' + as_split[3]);
@@ -114,4 +120,8 @@ export default class Handler {
 
 		return new Response("501 not implemented", {status: 501});
 	};
+
+	rollD6(): number {
+    return Math.floor(Math.random() * 6) + 1;
+}
 }
