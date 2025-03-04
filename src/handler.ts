@@ -77,7 +77,8 @@ export default class Handler {
 			return new Response(renderUserRedirect(as_split[1]), { headers: { 'Content-Type': 'text/html' } });
 		}
 
-		if (this.rollD6() == 1) {
+		// disabled
+		if (this.rollD6() == 0) {
 			let fox = await fetch("https://api.tinyfox.dev/img.json?animal=fox", {headers: {"accept": 'application/json'}});
 			let fox_json: tinyFoxJson = await fox.json();
 			return new Response(renderFoxEmbed("https://api.tinyfox.dev" + fox_json.loc), { headers: { 'Content-Type': 'text/html' } });
