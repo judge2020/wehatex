@@ -8,7 +8,7 @@ let homepage_html = `
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex">
-<style type="text/css">body{margin:40px
+<style>body{margin:40px
 auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0
 10px}h1,h2,h3{line-height:1.2}</style>
 <title>We Hate Xitter.</title>
@@ -19,9 +19,9 @@ auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0
 let end_homepage_html = `
 </body>
 </html>
-`
+`;
 
-const username_template_var = "TMPLUSRNMETMPL";
+const username_template_var = 'TMPLUSRNMETMPL';
 
 let attempt = `
 # We hate X.
@@ -32,15 +32,15 @@ Please try this Bluesky link to see if they are on bluesky: [${username_template
 `;
 
 export function renderUserPage(markdown: string): any {
-	return homepage_html + marked.parse(markdown) + end_homepage_html
+    return homepage_html + marked.parse(markdown) + end_homepage_html;
 }
 
 export function renderUserRedirect(twitter_username: string): any {
-	return renderUserPage(attempt.replaceAll(username_template_var, twitter_username));
+    return renderUserPage(attempt.replaceAll(username_template_var, twitter_username));
 }
 
 function renderEmbed(inner_html: string): any {
-	return `
+    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +55,7 @@ ${inner_html}
 }
 
 export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
-	return renderEmbed(`
+    return renderEmbed(`
 <meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 <meta name='twitter:card' content='summary_large_image' />
@@ -67,7 +67,7 @@ export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
 }
 
 export function renderFoxEmbed(media_url: string): any {
-	return renderEmbed(`
+    return renderEmbed(`
 <meta name='og:title' content='1d6 → 1 CRITICAL FAILURE. FOX DEPLOYED' />
 <meta name='og:site_name' content='FOR THE LOVE OF GOD STOP USING X' />
 <meta name='twitter:card' content='summary_large_image' />
@@ -80,7 +80,7 @@ export function renderFoxEmbed(media_url: string): any {
 
 export function renderTextEmbed(vx_json: VxJson): any {
 
-	return renderEmbed(`
+    return renderEmbed(`
 	<meta property="og:image" content="${vx_json.user_profile_image_url}" />
 	<meta name="twitter:card" content="tweet" />
 	<meta name="twitter:image" content="${vx_json.user_profile_image_url}" />
@@ -92,11 +92,7 @@ export function renderTextEmbed(vx_json: VxJson): any {
 }
 
 export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlink: string): any {
-	let username = vx_json.user_screen_name;
-	let name = vx_json["user_name"];
-	let text = vx_json["text"];
-
-	return renderEmbed(`
+    return renderEmbed(`
 <meta name="twitter:card" content="player" />
 <meta name="twitter:image" content="${media.thumbnail_url}" />
 
