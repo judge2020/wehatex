@@ -114,6 +114,9 @@ export default class Handler {
 
 		if (media.type == 'image') {
 			return new Response(renderImageEmbed(vx_json, await this.fix_media(media.url)), { headers: { 'Content-Type': 'text/html' } });
+		} else if (media.type == 'gif') {
+			let base_gifconvert = "https://gifconvert.vxtwitter.com/convert?url=";
+			return new Response(renderVideoEmbed(vx_json, media, base_gifconvert + media.url), { headers: { 'Content-Type': 'text/html' } });
 		} else if (media.type == 'video') {
 			// TODO gif handling
 			return new Response(renderVideoEmbed(vx_json, media, media.url), { headers: { 'Content-Type': 'text/html' } });
