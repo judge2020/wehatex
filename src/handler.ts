@@ -19,6 +19,8 @@ export default class Handler {
         'test'
     ];
 
+    my_user_agent = "CloudflareWorker/0.0; WeHateX/1.0 (github.com/judge2020/wehatex)";
+
     should_embed(user_agent: string): boolean {
         return this.generate_embed_user_agents.includes(user_agent) || user_agent.includes('WhatsApp/');
     }
@@ -74,14 +76,14 @@ export default class Handler {
 
         // disabled
         if (this.rollD6() == 0) {
-            let fox = await fetch('https://api.tinyfox.dev/img.json?animal=fox', { headers: { 'accept': 'application/json' } });
+            let fox = await fetch('https://api.tinyfox.dev/img.json?animal=fox', { headers: { 'accept': 'application/json', "user-agent": this.my_user_agent } });
             let fox_json: tinyFoxJson = await fox.json();
             return new Response(renderFoxEmbed('https://api.tinyfox.dev' + fox_json.loc), { headers: { 'Content-Type': 'text/html' } });
         }
 
         // logic pretty much copied from BetterTwitFix's logic. This complies with the DWTFYWTPL.
 
-        let vxtwitter_info = await fetch('https://api.vxtwitter.com/i/status/' + as_split[3]);
+        let vxtwitter_info = await fetch('https://api.vxtwitter.com/i/status/' + as_split[3], {headers: {"user-agent": this.my_user_agent}});
         let vx_json: VxJson = await vxtwitter_info.json();
 
         if (request.url.includes('debugjson=true')) {
