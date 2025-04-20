@@ -8,10 +8,23 @@ let homepage_html = `
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex">
-<style>body{margin:40px
-auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0
-10px}h1,h2,h3{line-height:1.2}</style>
-<title>We Hate Xitter.</title>
+<style>
+body {
+  margin:40px auto;
+  max-width:650px;
+  line-height:1.6;
+  font-size:18px;
+  color:#444;
+  padding:0 10px;
+}
+h1,h2,h3 {
+  line-height:1.2
+}
+code {
+  font-size: 14px;
+}
+</style>
+<title>We Hate X.</title>
 </head>
 <body>
 `;
@@ -48,7 +61,7 @@ ${inner_html}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex">
-<title>We Hate Xitter.</title>
+<title>We Hate X.</title>
 </head>
 </html>
 `;
