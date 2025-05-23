@@ -67,13 +67,23 @@ ${inner_html}
 `;
 }
 
+function escapeHtml(str: string|null): string {
+    if (!str) return '';
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
     return renderEmbed(`
-<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+<meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 <meta name='twitter:card' content='summary_large_image' />
 <meta name='twitter:site' content='${media_url}' />
-<meta name='og:description' content='${vx_json.text}' />
+<meta name='og:description' content='${escapeHtml(vx_json.text)}' />
 <meta name='twitter:image' content='${media_url}' />
 <meta name='twitter:image:alt' content='' />
 `);
@@ -97,9 +107,9 @@ export function renderTextEmbed(vx_json: VxJson): any {
 	<meta property="og:image" content="${vx_json.user_profile_image_url}" />
 	<meta name="twitter:card" content="tweet" />
 	<meta name="twitter:image" content="${vx_json.user_profile_image_url}" />
-	<meta name="twitter:creator" content="@${vx_json.user_screen_name}" />
-	<meta property="og:description" content="${vx_json.text}" />
-<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+	<meta name="twitter:creator" content="@${escapeHtml(vx_json.user_screen_name)}" />
+	<meta property="og:description" content="${escapeHtml(vx_json.text)}" />
+<meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 `);
 }
@@ -121,9 +131,9 @@ export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlin
 <meta property="og:video:width" content="${media.size.width}" />
 <meta property="og:video:height" content="${media.size.height}" />
 <meta property="og:image" content="${media.thumbnail_url}" />
-<meta property="og:description" content="${vx_json.text}" />
+<meta property="og:description" content="${escapeHtml(vx_json.text)}" />
 
-<meta name='og:title' content='${vx_json.user_name} (@${vx_json.user_screen_name}) on the worst site' />
+<meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 `);
 }
