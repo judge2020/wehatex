@@ -103,7 +103,7 @@ export default class Handler {
         }
 
         // we aint handling index selection
-        let media = vx_json.media_extended[0];
+        let media = mediaEmbedVx.media_extended[0];
 
         if (!media) {
             return new Response('501 not implemented', { status: 501 });
