@@ -5,26 +5,50 @@ let homepage_html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="robots" content="noindex">
-<style>
-body {
-  margin:40px auto;
-  max-width:650px;
-  line-height:1.6;
-  font-size:18px;
-  color:#444;
-  padding:0 10px;
-}
-h1,h2,h3 {
-  line-height:1.2
-}
-code {
-  font-size: 14px;
-}
-</style>
-<title>We Hate X.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      /* default (light) colors */
+      --bg-color: #ffffff;
+      --text-color: #444444;
+      --link-color: #0066cc;
+      --code-bg: rgba(0, 0, 0, 0.05);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* eye-friendly dark-mode colors */
+        --bg-color: #1e1e1e;
+        --text-color: #cfcfcf;
+        --link-color: #4ea1ff;
+        --code-bg: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    body {
+      margin: 40px auto;
+      max-width: 650px;
+      line-height: 1.6;
+      font-size: 18px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 0 10px;
+    }
+    a {
+      color: var(--link-color);
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+    }
+    code {
+      font-size: 14px;
+      background-color: var(--code-bg);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+  <title>We Hate X.</title>
 </head>
 <body>
 `;
@@ -33,6 +57,7 @@ let end_homepage_html = `
 </body>
 </html>
 `;
+
 
 const username_template_var = 'TMPLUSRNMETMPL';
 
