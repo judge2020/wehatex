@@ -3,6 +3,7 @@ import { VxJson, VxMediaExtended } from './types';
 
 let homepage_html = `
 <!DOCTYPE html>
+<!--suppress CssUnresolvedCustomProperty -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -102,13 +103,14 @@ function escapeHtml(str: string|null): string {
         .replace(/'/g, "&#039;");
 }
 
-export function renderImageEmbed(vx_json: VxJson, media_url: string): any {
+
+export function renderImageEmbed(vx_json: VxJson, media_url: string, overrideText: string|null): any {
     return renderEmbed(`
 <meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 <meta name='twitter:card' content='summary_large_image' />
 <meta name='twitter:site' content='${media_url}' />
-<meta name='og:description' content='${escapeHtml(vx_json.text)}' />
+<meta name='og:description' content='${escapeHtml(overrideText ?? vx_json.text)}' />
 <meta name='twitter:image' content='${media_url}' />
 <meta name='twitter:image:alt' content='' />
 `);
@@ -126,20 +128,20 @@ export function renderFoxEmbed(media_url: string): any {
 `);
 }
 
-export function renderTextEmbed(vx_json: VxJson): any {
+export function renderTextEmbed(vx_json: VxJson, overrideText: string|null): any {
 
     return renderEmbed(`
 	<meta property="og:image" content="${vx_json.user_profile_image_url}" />
 	<meta name="twitter:card" content="tweet" />
 	<meta name="twitter:image" content="${vx_json.user_profile_image_url}" />
 	<meta name="twitter:creator" content="@${escapeHtml(vx_json.user_screen_name)}" />
-	<meta property="og:description" content="${escapeHtml(vx_json.text)}" />
+	<meta property="og:description" content="${escapeHtml(overrideText ?? vx_json.text)}" />
 <meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />
 `);
 }
 
-export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlink: string): any {
+export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlink: string, overrideText: string|null): any {
     return renderEmbed(`
 <meta name="twitter:card" content="player" />
 <meta name="twitter:image" content="${media.thumbnail_url}" />
@@ -156,7 +158,7 @@ export function renderVideoEmbed(vx_json: VxJson, media: VxMediaExtended, vidlin
 <meta property="og:video:width" content="${media.size.width}" />
 <meta property="og:video:height" content="${media.size.height}" />
 <meta property="og:image" content="${media.thumbnail_url}" />
-<meta property="og:description" content="${escapeHtml(vx_json.text)}" />
+<meta property="og:description" content="${escapeHtml(overrideText ?? vx_json.text)}" />
 
 <meta name='og:title' content='${escapeHtml(vx_json.user_name)} (@${vx_json.user_screen_name}) on the worst site' />
 <meta name='og:site_name' content='Please stop using X, seriously.' />

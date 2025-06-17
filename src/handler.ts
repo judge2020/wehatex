@@ -19,7 +19,7 @@ export default class Handler {
         'test'
     ];
 
-    my_user_agent = "CloudflareWorker/0.0; WeHateX/1.0 (github.com/judge2020/wehatex)";
+    my_user_agent = 'CloudflareWorker/0.0; WeHateX/1.0 (github.com/judge2020/wehatex)';
 
     should_embed(user_agent: string): boolean {
         return this.generate_embed_user_agents.includes(user_agent) || user_agent.includes('WhatsApp/');
@@ -65,6 +65,32 @@ export default class Handler {
         return vx_json;
     }
 
+    buildText(vx_json: VxJson): string | null {
+        // if there's no base text, nothing to build
+        if (!vx_json.text) {
+            return null;
+        }
+
+        let text = vx_json.text;
+
+        // Handle quoted retweet (QRT)
+        if (vx_json.qrt?.text?.length) {
+            text += `\n\n【QRT of ${vx_json.qrt.user_name} (@${vx_json.qrt.user_screen_name}):】`;
+            text += `\n\n'${vx_json.qrt.text}'`;
+        }
+
+        // Handle community notes (original or on the quoted tweet)
+        if (vx_json.communityNote || vx_json.qrt?.communityNote) {
+            const note = vx_json.communityNote ?? vx_json.qrt!.communityNote!;
+            const onQuoted = vx_json.communityNote ? '' : ' ON QUOTED';
+            text += `\n\n【COMMUNITY NOTE${onQuoted}:】`;
+            text += `\n${note}`;
+        }
+
+        return text;
+    }
+
+
     async handleTweet(request: Request): Promise<Response> {
         let url = new URL(request.url);
         let as_split = url.pathname.split('/');
@@ -76,14 +102,19 @@ export default class Handler {
 
         // disabled
         if (this.rollD6() == 0) {
-            let fox = await fetch('https://api.tinyfox.dev/img.json?animal=fox', { headers: { 'accept': 'application/json', "user-agent": this.my_user_agent } });
+            let fox = await fetch('https://api.tinyfox.dev/img.json?animal=fox', {
+                headers: {
+                    'accept': 'application/json',
+                    'user-agent': this.my_user_agent
+                }
+            });
             let fox_json: tinyFoxJson = await fox.json();
             return new Response(renderFoxEmbed('https://api.tinyfox.dev' + fox_json.loc), { headers: { 'Content-Type': 'text/html' } });
         }
 
         // logic pretty much copied from BetterTwitFix's logic. This complies with the DWTFYWTPL.
 
-        let vxtwitter_info = await fetch('https://api.vxtwitter.com/i/status/' + as_split[3], {headers: {"user-agent": this.my_user_agent}});
+        let vxtwitter_info = await fetch('https://api.vxtwitter.com/i/status/' + as_split[3], { headers: { 'user-agent': this.my_user_agent } });
         let vx_json: VxJson = await vxtwitter_info.json();
 
         if (request.url.includes('debugjson=true')) {
@@ -92,14 +123,15 @@ export default class Handler {
 
         let mediaEmbedVx = this.determineEmbedTweet(vx_json);
 
+        let overrideText = this.buildText(vx_json);
+
         if (!mediaEmbedVx.hasMedia) {
-            // TODO text tweet
-            return new Response(renderTextEmbed(vx_json), { headers: { 'Content-Type': 'text/html' } });
+            return new Response(renderTextEmbed(vx_json, overrideText), { headers: { 'Content-Type': 'text/html' } });
         }
 
         // Default to the combined Media URL
         if (vx_json.combinedMediaUrl && mediaEmbedVx.allSameType) {
-            return new Response(renderImageEmbed(vx_json, vx_json.combinedMediaUrl), { headers: { 'Content-Type': 'text/html' } });
+            return new Response(renderImageEmbed(vx_json, vx_json.combinedMediaUrl, overrideText), { headers: { 'Content-Type': 'text/html' } });
         }
 
         // we aint handling index selection
@@ -110,13 +142,13 @@ export default class Handler {
         }
 
         if (media.type == 'image') {
-            return new Response(renderImageEmbed(vx_json, await this.fix_media(media.url)), { headers: { 'Content-Type': 'text/html' } });
+            return new Response(renderImageEmbed(vx_json, await this.fix_media(media.url), overrideText), { headers: { 'Content-Type': 'text/html' } });
         } else if (media.type == 'gif') {
             let base_gifconvert = 'https://gifconvert.vxtwitter.com/convert?url=';
-            return new Response(renderVideoEmbed(vx_json, media, base_gifconvert + media.url), { headers: { 'Content-Type': 'text/html' } });
+            return new Response(renderVideoEmbed(vx_json, media, base_gifconvert + media.url, overrideText), { headers: { 'Content-Type': 'text/html' } });
         } else if (media.type == 'video') {
             // TODO gif handling
-            return new Response(renderVideoEmbed(vx_json, media, media.url), { headers: { 'Content-Type': 'text/html' } });
+            return new Response(renderVideoEmbed(vx_json, media, media.url, overrideText), { headers: { 'Content-Type': 'text/html' } });
         }
 
         return new Response('501 not implemented', { status: 501 });
